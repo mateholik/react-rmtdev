@@ -16,16 +16,20 @@ import SortingControls from './SortingControls';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
-  const [jobItems, setJobItems] = useState(null);
+  const [jobItems, setJobItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const response = await fetch(`${BASE_URL}?search=${inputValue}`);
       const data = await response.json();
       setJobItems(data.jobItems);
+      setIsLoading(false);
     };
     if (inputValue) fetchData();
   }, [inputValue]);
@@ -46,7 +50,8 @@ function App() {
             <ResultsCount />
             <SortingControls />
           </SidebarTop>
-          {jobItems && <JobList jobItems={jobItems} />}
+
+          <JobList jobItems={jobItems} isLoading={isLoading} />
           <PaginationControls />
         </Sidebar>
         <JobItemContent />
