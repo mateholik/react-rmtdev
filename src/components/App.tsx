@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import Background from './Background';
 import Container from './Container';
 import Footer from './Footer';
 import Header, { HeaderTop } from './Header';
-import { BASE_URL } from '../lib/consts';
 import Logo from './Logo';
 import BookmarksButton from './BookmarksButton';
 import SearchForm from './SearchForm';
@@ -13,26 +11,11 @@ import ResultsCount from './ResultsCount';
 import JobList from './JobList';
 import PaginationControls from './PaginationControls';
 import SortingControls from './SortingControls';
+import { useJobList, useSearchText } from '../lib/hooks';
 
 function App() {
-  const [inputValue, setInputValue] = useState('');
-  const [jobItems, setJobItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const response = await fetch(`${BASE_URL}?search=${inputValue}`);
-      const data = await response.json();
-      setJobItems(data.jobItems);
-      setIsLoading(false);
-    };
-    if (inputValue) fetchData();
-  }, [inputValue]);
+  const { searchText, handleSearchChange } = useSearchText();
+  const { jobItems, isLoading } = useJobList(searchText);
 
   return (
     <>
@@ -42,7 +25,10 @@ function App() {
           <Logo />
           <BookmarksButton />
         </HeaderTop>
-        <SearchForm inputValue={inputValue} handleOnChange={handleOnChange} />
+        <SearchForm
+          inputValue={searchText}
+          handleOnChange={handleSearchChange}
+        />
       </Header>
       <Container>
         <Sidebar>
