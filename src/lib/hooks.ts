@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { BASE_URL } from './consts';
+import { JobItem } from './types';
 
 export function useJobList(searchText: string) {
-  const [jobItems, setJobItems] = useState([]);
+  const [jobItems, setJobItems] = useState<JobItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const jobItemsSliced = jobItems.slice(0, 7);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,10 +19,7 @@ export function useJobList(searchText: string) {
     if (searchText) fetchData();
   }, [searchText]);
 
-  return {
-    jobItems,
-    isLoading,
-  };
+  return [jobItemsSliced, isLoading] as const;
 }
 
 export function useSearchText() {

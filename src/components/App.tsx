@@ -15,7 +15,7 @@ import { useJobList, useSearchText } from '../lib/hooks';
 
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
-  const { jobItems, isLoading } = useJobList(searchText);
+  const [jobItems, isLoading] = useJobList(searchText);
 
   return (
     <>

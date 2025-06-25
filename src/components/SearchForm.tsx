@@ -1,4 +1,12 @@
-export default function SearchForm({ handleOnChange, inputValue }) {
+type SearchFormProps = {
+  handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputValue: string;
+};
+
+export default function SearchForm({
+  handleOnChange,
+  inputValue,
+}: SearchFormProps) {
   return (
     <form
       action='#'
