@@ -253,7 +253,6 @@ body::-webkit-scrollbar {
 
   scrollbar-color: #cacdd0 #ffffff; /* Firefox */
   scrollbar-width: thin; /* Firefox */
-  min-height: 100dvh;
 }
 
 .job-list::-webkit-scrollbar {

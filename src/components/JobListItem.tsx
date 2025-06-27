@@ -8,7 +8,11 @@ type JobItemProps = {
 export default function JobListItem({ jobItem }: JobItemProps) {
   return (
     <li className='job-item'>
-      <a className='job-item__link'>
+      <a
+        className='job-item__link'
+        href={`#${jobItem.id}`}
+        rel='noopener noreferrer'
+      >
         <div className='job-item__badge'>{jobItem.badgeLetters}</div>
 
         <div className='job-item__middle'>
