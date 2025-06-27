@@ -15,7 +15,7 @@ import { useJobList, useSearchText } from '../lib/hooks';
 
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
-  const [jobItems, isLoading] = useJobList(searchText);
+  const [jobItems, isLoading, totalNumberOfResults] = useJobList(searchText);
 
   return (
     <>
@@ -33,7 +33,7 @@ function App() {
       <Container>
         <Sidebar>
           <SidebarTop>
-            <ResultsCount />
+            <ResultsCount totalNumberOfResults={totalNumberOfResults} />
             <SortingControls />
           </SidebarTop>
 
