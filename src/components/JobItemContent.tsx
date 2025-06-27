@@ -74,7 +74,7 @@ export default function JobItemContent() {
             </div>
             <ul className='reviews__list'>
               {jobItem.reviews.map((review, index) => (
-                <li key={index} className='qualifications__item'>
+                <li key={index} className='reviews__item'>
                   {review}
                 </li>
               ))}
