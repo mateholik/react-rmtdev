@@ -11,11 +11,18 @@ import ResultsCount from './ResultsCount';
 import JobList from './JobList';
 import PaginationControls from './PaginationControls';
 import SortingControls from './SortingControls';
-import { useJobList, useSearchText } from '../lib/hooks';
+import { useDebounce, useJobList, useSearchText } from '../lib/hooks';
 
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
-  const [jobItems, isLoading, totalNumberOfResults] = useJobList(searchText);
+
+  const debouncedSearchText = useDebounce(searchText, 250);
+
+  const {
+    jobItemsSliced: jobItems,
+    isLoading,
+    totalNumberOfResults,
+  } = useJobList(debouncedSearchText);
 
   return (
     <>

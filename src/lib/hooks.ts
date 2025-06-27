@@ -20,7 +20,7 @@ export function useJobList(searchText: string) {
     if (searchText) fetchData();
   }, [searchText]);
 
-  return [jobItemsSliced, isLoading, totalNumberOfResults] as const;
+  return { jobItemsSliced, isLoading, totalNumberOfResults };
 }
 
 export function useSearchText() {
@@ -75,4 +75,15 @@ export function useJobItem(id: number | null) {
   }, [id]);
 
   return { jobItem, isLoading };
+}
+
+export function useDebounce(value, time) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => setDebouncedValue(value), time);
+    return () => clearTimeout(timerId);
+  }, [value, time]);
+
+  return debouncedValue;
 }
