@@ -18,11 +18,10 @@ function App() {
 
   const debouncedSearchText = useDebounce(searchText, 250);
 
-  const {
-    jobItemsSliced: jobItems,
-    isLoading,
-    totalNumberOfResults,
-  } = useJobList(debouncedSearchText);
+  const { jobItems, isLoading } = useJobList(debouncedSearchText);
+
+  const totalNumberOfResults = jobItems.length;
+  const jobItemsSliced = jobItems.slice(0, 7);
 
   return (
     <>
@@ -44,7 +43,7 @@ function App() {
             <SortingControls />
           </SidebarTop>
 
-          <JobList jobItems={jobItems} isLoading={isLoading} />
+          <JobList jobItems={jobItemsSliced} isLoading={isLoading} />
           <PaginationControls />
         </Sidebar>
         <JobItemContent />

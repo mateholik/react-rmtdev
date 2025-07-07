@@ -22,9 +22,6 @@ export function useJobList(searchText: string) {
   const [jobItems, setJobItems] = useState<JobItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalNumberOfResults = jobItems.length;
-  const jobItemsSliced = jobItems.slice(0, 7);
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -36,7 +33,7 @@ export function useJobList(searchText: string) {
     if (searchText) fetchData();
   }, [searchText]);
 
-  return { jobItemsSliced, isLoading, totalNumberOfResults };
+  return { jobItems, isLoading };
 }
 
 export function useSearchText() {
