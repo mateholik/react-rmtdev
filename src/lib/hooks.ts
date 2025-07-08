@@ -7,6 +7,11 @@ type JobItemApiResponse = {
   public: boolean;
   jobItem: JobItemExpanded;
 };
+type JobItemsApiResponse = {
+  public: boolean;
+  sorted: boolean;
+  jobItems: JobItem[];
+};
 
 const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
   const response = await fetch(`${BASE_URL}/${id}`);
@@ -18,22 +23,34 @@ const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
   return data;
 };
 
-export function useJobList(searchText: string) {
-  const [jobItems, setJobItems] = useState<JobItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const fetchJobItems = async (
+  searchText: string
+): Promise<JobItemsApiResponse> => {
+  const response = await fetch(`${BASE_URL}?search=${searchText}`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.description);
+  }
+  const data = await response.json();
+  return data;
+};
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const response = await fetch(`${BASE_URL}?search=${searchText}`);
-      const data = await response.json();
-      setJobItems(data.jobItems);
-      setIsLoading(false);
-    };
-    if (searchText) fetchData();
-  }, [searchText]);
+export function useJobItems(searchText: string) {
+  const { data, isInitialLoading } = useQuery(
+    ['job-items', searchText],
+    () => fetchJobItems(searchText),
+    {
+      staleTime: 1000 * 60 * 60, // refetch every hour
+      refetchOnWindowFocus: false, // on tab swithing
+      retry: false,
+      enabled: true,
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
-  return { jobItems, isLoading };
+  return { jobItems: data?.jobItems, isLoading: isInitialLoading } as const;
 }
 
 export function useSearchText() {
@@ -69,7 +86,7 @@ export function useActiveId() {
 
   return activeId;
 }
-
+//--------------------------------------
 export function useJobItem(id: number | null) {
   const { data, isInitialLoading } = useQuery(
     ['job-item', id],
@@ -85,10 +102,9 @@ export function useJobItem(id: number | null) {
     }
   );
 
-  const jobItem = data?.jobItem;
-  const isLoading = isInitialLoading;
-  return { jobItem, isLoading };
+  return { jobItem: data?.jobItem, isLoading: isInitialLoading } as const;
 }
+//--------------------------------------
 
 export function useDebounce<T>(value: T, time = 500): T {
   const [debouncedValue, setDebouncedValue] = useState(value);

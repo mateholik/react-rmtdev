@@ -11,17 +11,17 @@ import ResultsCount from './ResultsCount';
 import JobList from './JobList';
 import PaginationControls from './PaginationControls';
 import SortingControls from './SortingControls';
-import { useDebounce, useJobList, useSearchText } from '../lib/hooks';
+import { useDebounce, useJobItems, useSearchText } from '../lib/hooks';
 
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
 
   const debouncedSearchText = useDebounce(searchText, 250);
 
-  const { jobItems, isLoading } = useJobList(debouncedSearchText);
+  const { jobItems, isLoading } = useJobItems(debouncedSearchText);
 
-  const totalNumberOfResults = jobItems.length;
-  const jobItemsSliced = jobItems.slice(0, 7);
+  const totalNumberOfResults = jobItems?.length || 0;
+  const jobItemsSliced = jobItems?.slice(0, 7) || [];
 
   return (
     <>
