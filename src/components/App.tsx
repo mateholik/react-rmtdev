@@ -14,8 +14,14 @@ import SortingControls from './SortingControls';
 import { useDebounce, useJobItems, useSearchText } from '../lib/hooks';
 
 import { Toaster } from 'react-hot-toast';
+import { useState } from 'react';
+import { PaginationDirection } from '../lib/types';
+
+const VISIBLE_ITEMS_PER_PAGE = 7;
 
 function App() {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { searchText, handleSearchChange } = useSearchText();
 
   const debouncedSearchText = useDebounce(searchText, 250);
@@ -23,7 +29,19 @@ function App() {
   const { jobItems, isLoading } = useJobItems(debouncedSearchText);
 
   const totalNumberOfResults = jobItems?.length || 0;
-  const jobItemsSliced = jobItems?.slice(0, 7) || [];
+  const jobItemsSliced =
+    jobItems?.slice(
+      VISIBLE_ITEMS_PER_PAGE * currentPage - VISIBLE_ITEMS_PER_PAGE,
+      VISIBLE_ITEMS_PER_PAGE * currentPage
+    ) || [];
+
+  const handleClick = (direction: PaginationDirection) => {
+    if (direction === 'previous') {
+      setCurrentPage((prev) => prev - 1);
+    } else if (direction === 'next') {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <>
@@ -47,7 +65,7 @@ function App() {
           </SidebarTop>
 
           <JobList jobItems={jobItemsSliced} isLoading={isLoading} />
-          <PaginationControls />
+          <PaginationControls currentPage={currentPage} onClick={handleClick} />
         </Sidebar>
         <JobItemContent />
       </Container>

@@ -28,3 +28,5 @@ export type JobItemsApiResponse = {
   sorted: boolean;
   jobItems: JobItem[];
 };
+
+export type PaginationDirection = 'previous' | 'next';
