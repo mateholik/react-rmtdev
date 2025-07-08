@@ -1,39 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BASE_URL } from './constants';
-import { JobItem, JobItemExpanded } from './types';
 import { useQuery } from '@tanstack/react-query';
-
-type JobItemApiResponse = {
-  public: boolean;
-  jobItem: JobItemExpanded;
-};
-type JobItemsApiResponse = {
-  public: boolean;
-  sorted: boolean;
-  jobItems: JobItem[];
-};
-
-const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
-  const response = await fetch(`${BASE_URL}/${id}`);
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.description);
-  }
-  const data = await response.json();
-  return data;
-};
-
-const fetchJobItems = async (
-  searchText: string
-): Promise<JobItemsApiResponse> => {
-  const response = await fetch(`${BASE_URL}?search=${searchText}`);
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.description);
-  }
-  const data = await response.json();
-  return data;
-};
+import { fetchJobItem, fetchJobItems, handleError } from './utils';
 
 export function useJobItems(searchText: string) {
   const { data, isInitialLoading } = useQuery(
@@ -43,10 +10,8 @@ export function useJobItems(searchText: string) {
       staleTime: 1000 * 60 * 60, // refetch every hour
       refetchOnWindowFocus: false, // on tab swithing
       retry: false,
-      enabled: true,
-      onError: (error) => {
-        console.log(error);
-      },
+      enabled: !!searchText,
+      onError: handleError,
     }
   );
 
@@ -95,10 +60,8 @@ export function useJobItem(id: number | null) {
       staleTime: 1000 * 60 * 60, // refetch every hour
       refetchOnWindowFocus: false, // on tab swithing
       retry: false,
-      enabled: !!id, // on component mount
-      onError: (error) => {
-        console.log(error);
-      },
+      enabled: !!id,
+      onError: handleError,
     }
   );
 

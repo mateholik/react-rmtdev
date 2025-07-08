@@ -13,6 +13,8 @@ import PaginationControls from './PaginationControls';
 import SortingControls from './SortingControls';
 import { useDebounce, useJobItems, useSearchText } from '../lib/hooks';
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
 
@@ -25,6 +27,7 @@ function App() {
 
   return (
     <>
+      <Toaster position='top-right' />
       <Background />
       <Header>
         <HeaderTop>
