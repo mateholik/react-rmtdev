@@ -30,3 +30,5 @@ export type JobItemsApiResponse = {
 };
 
 export type PaginationDirection = 'previous' | 'next';
+
+export type SortBy = 'relevant' | 'recent';

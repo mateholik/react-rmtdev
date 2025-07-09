@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobItem, fetchJobItems, handleError } from './utils';
-import { PaginationDirection } from './types';
+import { PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 
 export function useJobItems(searchText: string) {
@@ -101,5 +101,15 @@ export function usePagination(totalNumberOfResults: number) {
 
   const totalNumberOfPages = totalNumberOfResults / VISIBLE_ITEMS_PER_PAGE;
 
-  return { currentPage, totalNumberOfPages, handleClick };
+  return {
+    currentPage,
+    totalNumberOfPages,
+    handleClick,
+    setCurrentPage,
+  } as const;
+}
+
+export function useSort() {
+  const [sortBy, setSortBy] = useState<SortBy>('relevant');
+  return { sortBy, setSortBy } as const;
 }
