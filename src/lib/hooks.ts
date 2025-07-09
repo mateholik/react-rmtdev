@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobItem, fetchJobItems, handleError } from './utils';
+import { PaginationDirection } from './types';
+import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 
 export function useJobItems(searchText: string) {
   const { data, isInitialLoading } = useQuery(
@@ -15,7 +17,14 @@ export function useJobItems(searchText: string) {
     }
   );
 
-  return { jobItems: data?.jobItems, isLoading: isInitialLoading } as const;
+  const jobItems = data?.jobItems;
+  const totalNumberOfResults = jobItems?.length || 0;
+
+  return {
+    jobItems,
+    isLoading: isInitialLoading,
+    totalNumberOfResults,
+  } as const;
 }
 
 export function useSearchText() {
@@ -51,7 +60,7 @@ export function useActiveId() {
 
   return activeId;
 }
-//--------------------------------------
+
 export function useJobItem(id: number | null) {
   const { data, isInitialLoading } = useQuery(
     ['job-item', id],
@@ -67,7 +76,6 @@ export function useJobItem(id: number | null) {
 
   return { jobItem: data?.jobItem, isLoading: isInitialLoading } as const;
 }
-//--------------------------------------
 
 export function useDebounce<T>(value: T, time = 500): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -78,4 +86,20 @@ export function useDebounce<T>(value: T, time = 500): T {
   }, [value, time]);
 
   return debouncedValue;
+}
+
+export function usePagination(totalNumberOfResults: number) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleClick = (direction: PaginationDirection) => {
+    if (direction === 'previous') {
+      setCurrentPage((prev) => prev - 1);
+    } else if (direction === 'next') {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const totalNumberOfPages = totalNumberOfResults / VISIBLE_ITEMS_PER_PAGE;
+
+  return { currentPage, totalNumberOfPages, handleClick };
 }
