@@ -35,6 +35,8 @@ function App() {
       VISIBLE_ITEMS_PER_PAGE * currentPage
     ) || [];
 
+  const totalNumberOfPages = totalNumberOfResults / VISIBLE_ITEMS_PER_PAGE;
+
   const handleClick = (direction: PaginationDirection) => {
     if (direction === 'previous') {
       setCurrentPage((prev) => prev - 1);
@@ -65,7 +67,11 @@ function App() {
           </SidebarTop>
 
           <JobList jobItems={jobItemsSliced} isLoading={isLoading} />
-          <PaginationControls currentPage={currentPage} onClick={handleClick} />
+          <PaginationControls
+            currentPage={currentPage}
+            onClick={handleClick}
+            totalNumberOfPages={totalNumberOfPages}
+          />
         </Sidebar>
         <JobItemContent />
       </Container>
