@@ -70,7 +70,6 @@ function App() {
       </Header>
       <Container>
         <Sidebar>
-          {sortBy}
           <SidebarTop>
             <ResultsCount totalNumberOfResults={totalNumberOfResults} />
             <SortingControls onClick={handleSortByChange} sortBy={sortBy} />
