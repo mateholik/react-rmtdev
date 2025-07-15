@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobItem, fetchJobItems, handleError } from './utils';
 import { PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
+import { BookmarksContext } from '../contexts/BookmarsContextProvider';
 
 export function useJobItems(searchText: string) {
   const { data, isInitialLoading } = useQuery(
@@ -112,4 +113,28 @@ export function usePagination(totalNumberOfResults: number) {
 export function useSort() {
   const [sortBy, setSortBy] = useState<SortBy>('relevant');
   return { sortBy, setSortBy } as const;
+}
+
+export function useLocalStorage<T>(
+  keyName: string,
+  initialState: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const [value, setValue] = useState(() => {
+    const value = localStorage.getItem(keyName);
+    return JSON.parse(value || JSON.stringify(initialState));
+  });
+
+  useEffect(() => {
+    localStorage.setItem(keyName, JSON.stringify(value));
+  }, [value, keyName]);
+
+  return [value, setValue] as const;
+}
+
+export function useBookmarksContext() {
+  const context = useContext(BookmarksContext);
+  if (!context) {
+    throw new Error('BookmarksContext must be used within a provider');
+  }
+  return context;
 }
