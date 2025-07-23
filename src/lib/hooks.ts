@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { fetchJobItem, fetchJobItems, handleError } from './utils';
-import { PaginationDirection, SortBy } from './types';
+import { JobItemExpanded, PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 import { BookmarksContext } from '../contexts/BookmarsContextProvider';
 
@@ -76,6 +76,33 @@ export function useJobItem(id: number | null) {
   );
 
   return { jobItem: data?.jobItem, isLoading: isInitialLoading } as const;
+}
+
+export function useJobItems(ids: number[]) {
+  const results = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ['job-item', id],
+      queryFn: () => fetchJobItem(id),
+      staleTime: 1000 * 60 * 60, // refetch every hour
+      refetchOnWindowFocus: false, // on tab swithing
+      retry: false,
+      enabled: !!id,
+      onError: handleError,
+    })),
+  });
+
+  const jobItems = results
+    .map((result) => result.data?.jobItem)
+    .filter((jobItem) => Boolean(jobItem)) as JobItemExpanded[]; // Filter out undefined jobItems
+  // .filter((jobItem) => jobItem !== undefined);
+  // .filter((jobItem) => !!jobItem); // Filter out undefined jobItems
+
+  const isInitialLoading = results.some((result) => result.isInitialLoading);
+
+  return {
+    jobItems,
+    isLoading: isInitialLoading,
+  } as const;
 }
 
 export function useDebounce<T>(value: T, time = 500): T {

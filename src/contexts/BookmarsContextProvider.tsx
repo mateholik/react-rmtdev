@@ -1,6 +1,6 @@
 import { createContext, useEffect } from 'react';
-import { useSearchQuery, useLocalStorage } from '../lib/hooks';
-import { JobItem } from '../lib/types';
+import { useLocalStorage, useJobItems } from '../lib/hooks';
+import { JobItemExpanded } from '../lib/types';
 
 type BookmarksContextProviderProps = {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ type BookmarksContextProviderProps = {
 type BookmarksContext = {
   bookmarkedIDs: number[];
   isLoading: boolean;
-  bookmarkedJobItems: JobItem[];
+  bookmarkedJobItems: JobItemExpanded[];
   toggleBookmark: (id: number) => void;
 };
 
@@ -23,7 +23,7 @@ export default function BookmarksContextProvider({
   );
 
   const { jobItems: bookmarkedJobItems, isLoading } =
-    useSearchQuery(bookmarkedIDs);
+    useJobItems(bookmarkedIDs);
 
   const toggleBookmark = (id: number) => {
     setBookmarkedIDs((prev) => {
