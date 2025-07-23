@@ -1,11 +1,14 @@
 import { createContext, useEffect } from 'react';
-import { useLocalStorage } from '../lib/hooks';
+import { useSearchQuery, useLocalStorage } from '../lib/hooks';
+import { JobItem } from '../lib/types';
 
 type BookmarksContextProviderProps = {
   children: React.ReactNode;
 };
 type BookmarksContext = {
   bookmarkedIDs: number[];
+  isLoading: boolean;
+  bookmarkedJobItems: JobItem[];
   toggleBookmark: (id: number) => void;
 };
 
@@ -18,6 +21,9 @@ export default function BookmarksContextProvider({
     'bookmarked-ids',
     []
   );
+
+  const { jobItems: bookmarkedJobItems, isLoading } =
+    useSearchQuery(bookmarkedIDs);
 
   const toggleBookmark = (id: number) => {
     setBookmarkedIDs((prev) => {
@@ -34,7 +40,9 @@ export default function BookmarksContextProvider({
   }, [bookmarkedIDs]);
 
   return (
-    <BookmarksContext.Provider value={{ bookmarkedIDs, toggleBookmark }}>
+    <BookmarksContext.Provider
+      value={{ bookmarkedIDs, toggleBookmark, bookmarkedJobItems, isLoading }}
+    >
       {children}
     </BookmarksContext.Provider>
   );

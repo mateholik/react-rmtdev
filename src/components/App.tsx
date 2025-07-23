@@ -13,7 +13,7 @@ import PaginationControls from './PaginationControls';
 import SortingControls from './SortingControls';
 import {
   useDebounce,
-  useJobItems,
+  useSearchQuery,
   usePagination,
   useSearchText,
   useSort,
@@ -29,7 +29,7 @@ function App() {
   const debouncedSearchText = useDebounce(searchText, 250);
 
   const { jobItems, isLoading, totalNumberOfResults } =
-    useJobItems(debouncedSearchText);
+    useSearchQuery(debouncedSearchText);
 
   const { currentPage, handleClick, totalNumberOfPages, setCurrentPage } =
     usePagination(totalNumberOfResults);

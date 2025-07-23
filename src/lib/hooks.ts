@@ -5,7 +5,7 @@ import { PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 import { BookmarksContext } from '../contexts/BookmarsContextProvider';
 
-export function useJobItems(searchText: string) {
+export function useSearchQuery(searchText: string) {
   const { data, isInitialLoading } = useQuery(
     ['job-items', searchText],
     () => fetchJobItems(searchText),
