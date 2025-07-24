@@ -4,6 +4,7 @@ import { fetchJobItem, fetchJobItems, handleError } from './utils';
 import { JobItemExpanded, PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 import { BookmarksContext } from '../contexts/BookmarsContextProvider';
+import { ActiveIdContext } from '../contexts/ActiveIdContextProvider';
 
 export function useSearchQuery(searchText: string) {
   const { data, isInitialLoading } = useQuery(
@@ -162,6 +163,13 @@ export function useBookmarksContext() {
   const context = useContext(BookmarksContext);
   if (!context) {
     throw new Error('BookmarksContext must be used within a provider');
+  }
+  return context;
+}
+export function useActiveIdContext() {
+  const context = useContext(ActiveIdContext);
+  if (!context) {
+    throw new Error('ActiveIdContext must be used within a provider');
   }
   return context;
 }
