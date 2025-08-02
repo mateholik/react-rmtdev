@@ -156,7 +156,7 @@ export function useLocalStorage<T>(
     localStorage.setItem(keyName, JSON.stringify(value));
   }, [value, keyName]);
 
-  return [value, setValue] as const;
+  return [value, setValue];
 }
 
 export function useBookmarksContext() {
