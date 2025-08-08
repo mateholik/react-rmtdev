@@ -22,7 +22,6 @@ import {
 import { Toaster } from 'react-hot-toast';
 import { VISIBLE_ITEMS_PER_PAGE } from '../lib/constants';
 import { SortBy } from '../lib/types';
-import ActiveIdContextProvider from '../contexts/ActiveIdContextProvider';
 
 function App() {
   const { searchText, handleSearchChange } = useSearchText();
@@ -70,22 +69,20 @@ function App() {
         />
       </Header>
       <Container>
-        <ActiveIdContextProvider>
-          <Sidebar>
-            <SidebarTop>
-              <ResultsCount totalNumberOfResults={totalNumberOfResults} />
-              <SortingControls onClick={handleSortByChange} sortBy={sortBy} />
-            </SidebarTop>
+        <Sidebar>
+          <SidebarTop>
+            <ResultsCount totalNumberOfResults={totalNumberOfResults} />
+            <SortingControls onClick={handleSortByChange} sortBy={sortBy} />
+          </SidebarTop>
 
-            <JobList jobItems={jobItemsSortedAndSliced} isLoading={isLoading} />
-            <PaginationControls
-              currentPage={currentPage}
-              onClick={handleClick}
-              totalNumberOfPages={totalNumberOfPages}
-            />
-          </Sidebar>
-          <JobItemContent />
-        </ActiveIdContextProvider>
+          <JobList jobItems={jobItemsSortedAndSliced} isLoading={isLoading} />
+          <PaginationControls
+            currentPage={currentPage}
+            onClick={handleClick}
+            totalNumberOfPages={totalNumberOfPages}
+          />
+        </Sidebar>
+        <JobItemContent />
       </Container>
       <Footer />
     </>
