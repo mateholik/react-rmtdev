@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 import {
   usePagination,
   useSearchQuery,
@@ -42,17 +42,25 @@ export default function JobItemsContextProvider({
 
   const { sortBy, setSortBy } = useSort();
 
-  const jobItemsSorted = [...(jobItems || [])].sort((a, b) => {
-    if (sortBy === 'relevant') {
-      return b.relevanceScore - a.relevanceScore;
-    } else {
-      return a.daysAgo - b.daysAgo;
-    }
-  });
+  const jobItemsSorted = useMemo(
+    () =>
+      [...(jobItems || [])].sort((a, b) => {
+        if (sortBy === 'relevant') {
+          return b.relevanceScore - a.relevanceScore;
+        } else {
+          return a.daysAgo - b.daysAgo;
+        }
+      }),
+    [sortBy, jobItems]
+  );
 
-  const jobItemsSortedAndSliced = jobItemsSorted.slice(
-    VISIBLE_ITEMS_PER_PAGE * currentPage - VISIBLE_ITEMS_PER_PAGE,
-    VISIBLE_ITEMS_PER_PAGE * currentPage
+  const jobItemsSortedAndSliced = useMemo(
+    () =>
+      jobItemsSorted.slice(
+        VISIBLE_ITEMS_PER_PAGE * currentPage - VISIBLE_ITEMS_PER_PAGE,
+        VISIBLE_ITEMS_PER_PAGE * currentPage
+      ),
+    [jobItemsSorted, currentPage]
   );
 
   const handleSortByChange = (sortBy: SortBy) => {
