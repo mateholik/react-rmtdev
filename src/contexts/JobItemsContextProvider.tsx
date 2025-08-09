@@ -1,4 +1,4 @@
-import { createContext, useMemo } from 'react';
+import { createContext, useCallback, useMemo } from 'react';
 import {
   usePagination,
   useSearchQuery,
@@ -63,25 +63,38 @@ export default function JobItemsContextProvider({
     [jobItemsSorted, currentPage]
   );
 
-  const handleSortByChange = (sortBy: SortBy) => {
+  const handleSortByChange = useCallback((sortBy: SortBy) => {
     setSortBy(sortBy);
     setCurrentPage(1);
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      jobItems,
+      jobItemsSortedAndSliced,
+      isLoading,
+      totalNumberOfResults,
+      totalNumberOfPages,
+      currentPage,
+      sortBy,
+      handleChangePage,
+      handleSortByChange,
+    }),
+    [
+      jobItems,
+      jobItemsSortedAndSliced,
+      isLoading,
+      totalNumberOfResults,
+      totalNumberOfPages,
+      currentPage,
+      sortBy,
+      handleChangePage,
+      handleSortByChange,
+    ]
+  );
 
   return (
-    <JobItemsContext.Provider
-      value={{
-        jobItems,
-        jobItemsSortedAndSliced,
-        isLoading,
-        totalNumberOfResults,
-        totalNumberOfPages,
-        currentPage,
-        sortBy,
-        handleChangePage,
-        handleSortByChange,
-      }}
-    >
+    <JobItemsContext.Provider value={contextValue}>
       {children}
     </JobItemsContext.Provider>
   );
