@@ -5,6 +5,8 @@ import { JobItemExpanded, PaginationDirection, SortBy } from './types';
 import { VISIBLE_ITEMS_PER_PAGE } from './constants';
 import { BookmarksContext } from '../contexts/BookmarsContextProvider';
 import { ActiveIdContext } from '../contexts/ActiveIdContextProvider';
+import { SearchTextContext } from '../contexts/SearchTextContextProvider';
+import { JobItemsContext } from '../contexts/JobItemsContextProvider';
 
 export function useSearchQuery(searchText: string) {
   const { data, isInitialLoading } = useQuery(
@@ -27,19 +29,6 @@ export function useSearchQuery(searchText: string) {
     isLoading: isInitialLoading,
     totalNumberOfResults,
   } as const;
-}
-
-export function useSearchText() {
-  const [searchText, setSearchText] = useState('');
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(event.target.value);
-  };
-
-  return {
-    searchText,
-    handleSearchChange,
-  };
 }
 
 export function useActiveId() {
@@ -170,6 +159,21 @@ export function useActiveIdContext() {
   const context = useContext(ActiveIdContext);
   if (!context) {
     throw new Error('ActiveIdContext must be used within a provider');
+  }
+  return context;
+}
+
+export function useSearchTextContext() {
+  const context = useContext(SearchTextContext);
+  if (!context) {
+    throw new Error('SearchTextContext must be used within a provider');
+  }
+  return context;
+}
+export function useJobItemsContext() {
+  const context = useContext(JobItemsContext);
+  if (!context) {
+    throw new Error('JobItemsContext must be used within a provider');
   }
   return context;
 }
